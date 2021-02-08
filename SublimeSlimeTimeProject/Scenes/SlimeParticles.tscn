@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/SlimeParticles.gd" type="Script" id=1]
+
+[node name="SlimeParticles" type="CPUParticles2D"]
+amount = 1
+lifetime = 0.25
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 279.57
+initial_velocity_random = 1.0
+scale_amount = 10.8
+scale_amount_random = 0.12
+color = Color( 0.541176, 0.780392, 0.470588, 1 )
+script = ExtResource( 1 )

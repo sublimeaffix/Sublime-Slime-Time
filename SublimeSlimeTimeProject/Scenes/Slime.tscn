@@ -1,0 +1,116 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Scripts/Slime.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/Slime-sheet.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform float hit_opacity = 0;
+
+void fragment(){
+	COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - hit_opacity) + vec3(1,1,1) * hit_opacity; 
+	COLOR.a = texture(TEXTURE, UV).a ;
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/hit_opacity = 0.0
+
+[sub_resource type="Animation" id=4]
+length = 0.7
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.354063 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.7
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.351946 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 2, 3 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "hit"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/hit_opacity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[node name="Slime" type="KinematicBody2D"]
+position = Vector2( 321, -281 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2( -2.01001, 1.98 )
+scale = Vector2( 2.2, 1.8 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 3 )
+scale = Vector2( 4, 4 )
+texture = ExtResource( 2 )
+hframes = 4
+frame = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/walk_left = SubResource( 4 )
+anims/walk_right = SubResource( 5 )
+
+[node name="S_Hitbox" type="Area2D" parent="."]
+position = Vector2( -2.01, 1.98 )
+scale = Vector2( 2.6, 2.12 )
+
+[node name="HB_Collision" type="CollisionShape2D" parent="S_Hitbox"]
+shape = SubResource( 1 )
+
+[node name="y_KnockbackTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="x_KnockbackTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="SlimeAreaEnteredTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="HitEffect" type="AnimationPlayer" parent="."]
+anims/hit = SubResource( 6 )
+[connection signal="area_entered" from="S_Hitbox" to="." method="_on_S_Hitbox_area_entered"]
+[connection signal="timeout" from="y_KnockbackTimer" to="." method="_on_y_KnockbackTimer_timeout"]
+[connection signal="timeout" from="x_KnockbackTimer" to="." method="_on_x_KnockbackTimer_timeout"]
+[connection signal="timeout" from="SlimeAreaEnteredTimer" to="." method="_on_SlimeAreaEnteredTimer_timeout"]

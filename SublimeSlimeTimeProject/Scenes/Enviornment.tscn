@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://CRT/crt_material.tres" type="Material" id=1]
+
+[sub_resource type="Environment" id=5]
+background_mode = 4
+ambient_light_color = Color( 0.0901961, 0.788235, 0.721569, 1 )
+ambient_light_energy = 0.0
+glow_enabled = true
+glow_intensity = 0.33
+glow_blend_mode = 0
+glow_hdr_threshold = 0.06
+glow_hdr_luminance_cap = 2.64
+glow_bicubic_upscale = true
+
+[node name="Enviornment" type="Node"]
+editor/display_folded = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 5 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = ExtResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
